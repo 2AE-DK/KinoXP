@@ -1,7 +1,8 @@
 package dk.aae.backend.movies.controller;
 
+import dk.aae.backend.movies.dto.ApiSearchMovie;
 import dk.aae.backend.movies.dto.MovieDto;
-import dk.aae.backend.movies.dto.MovieMapper;
+import dk.aae.backend.movies.dto.DtoMapper;
 import dk.aae.backend.movies.model.Movie;
 import dk.aae.backend.movies.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,12 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
-    private final MovieMapper movieMapper;
+    private final DtoMapper dtoMapper;
 
     @Autowired
-    public MovieController(MovieService movieService, MovieMapper movieMapper) {
+    public MovieController(MovieService movieService, DtoMapper dtoMapper) {
         this.movieService = movieService;
-        this.movieMapper = movieMapper;
+        this.dtoMapper = dtoMapper;
 
     }
 
@@ -28,20 +29,25 @@ public class MovieController {
     public ResponseEntity<List<MovieDto>> findAll() {
         List<MovieDto> dtos = movieService.findAll()
                 .stream()
-                .map(movieMapper::toDto)
+                .map(dtoMapper::toDto)
                 .toList();
         return ResponseEntity.ok(dtos);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MovieDto> findById(@PathVariable Long id) {
-        Movie movie = movieService.findById(id);
-        return ResponseEntity.ok(movieMapper.toDto(movie));
+    //1. Søgefunktion (kun API)
+    @GetMapping("/search")
+    public ResponseEntity<List<ApiSearchMovie>> searchMovies(@RequestParam String title) {
+        List<ApiSearchMovie> movies = movieService.searchMovies(title);
+        if (movies.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(movies);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<MovieDto> findByTitle(@RequestParam(required = false) String title) {
-        MovieDto movie = movieService.findByTitle(title);
+    //2. Henter detaljer om en specifik film, (DB først, ellers API)
+    @GetMapping("/{imdbId}")
+    public ResponseEntity<MovieDto> getMovieDetails(@PathVariable String imdbId) {
+        MovieDto movie = movieService.getMovieDetails(imdbId);
         return ResponseEntity.ok(movie);
     }
 }
