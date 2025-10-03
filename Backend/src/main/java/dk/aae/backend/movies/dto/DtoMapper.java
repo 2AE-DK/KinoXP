@@ -1,12 +1,11 @@
 package dk.aae.backend.movies.dto;
 
 import dk.aae.backend.movies.model.Movie;
+import dk.aae.backend.movies.model.User;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
-public class MovieMapper {
+public class DtoMapper {
 
     public MovieDto toDto(Movie movie) {
         return new MovieDto(
@@ -40,5 +39,21 @@ public class MovieMapper {
         movie.setImdbRating(dto.imdbRating());
         movie.setImdbId(dto.imdbId());
         return movie;
+    }
+
+    public UserDto toDto(User user){
+        return new UserDto(
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+
+    public User toEntity(UserDto dto) {
+        User user = new User();
+        user.setEmail(dto.email());
+        user.setUsername(dto.username());
+        user.setRole(dto.role());
+        return user;
     }
 }

@@ -1,14 +1,15 @@
 package dk.aae.backend.movies.service;
 
+import dk.aae.backend.movies.dto.ApiSearchMovie;
+import dk.aae.backend.movies.dto.ApiSearchResult;
 import dk.aae.backend.movies.dto.MovieDto;
-import dk.aae.backend.movies.dto.MovieMapper;
+import dk.aae.backend.movies.dto.DtoMapper;
 import dk.aae.backend.movies.model.Movie;
 import dk.aae.backend.movies.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +18,8 @@ import java.util.Optional;
 public class MovieService {
 
     private final MovieRepository movieRepository;
+    private final DtoMapper dtoMapper;
     private final RestTemplate restTemplate = new RestTemplate();
-    private final MovieMapper movieMapper;
 
 
     @Value("${omdb.api.key}")
@@ -27,46 +28,43 @@ public class MovieService {
     @Value("${omdb.api.url}")
     private String apiUrl;
 
-    public MovieService(MovieRepository movieRepository, MovieMapper movieMapper) {
+    public MovieService(MovieRepository movieRepository, DtoMapper dtoMapper) {
         this.movieRepository = movieRepository;
-        this.movieMapper = movieMapper;
+        this.dtoMapper = dtoMapper;
     }
 
     public List<Movie> findAll() {
         return movieRepository.findAll();
     }
 
-    // Fetch from DB or OMDb if missing
-    public MovieDto findByTitle(String title) {
-        Optional<Movie> dbMovie = movieRepository.findByTitle(title);
+    public List<ApiSearchMovie> searchMovies(String query) {
+        String searchUrl = apiUrl + "?apikey={apiKey}&s={query}&type=movie";
+        ApiSearchResult searchResult = restTemplate.getForObject(searchUrl, ApiSearchResult.class, apiKey, query);
+
+        if (searchResult != null && searchResult.Search() != null) {
+            return searchResult.Search(); //returner liste af matches (fra API, ikke DB)
+        }
+        return List.of();
+    }
+
+    public MovieDto getMovieDetails(String imdbId) {
+        //1. Tjek DB
+        Optional<Movie> dbMovie = movieRepository.findByImdbId(imdbId);
         if (dbMovie.isPresent()) {
-            return movieMapper.toDto(dbMovie.get());
+            return dtoMapper.toDto(dbMovie.get());
         }
 
-        // Fetch from OMDb/Api
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory());
+        //2. Hvis ikke i DB, hent fra API
+        String detailUrl = apiUrl + "?apikey={apiKey}&i={imdbId}";
+        MovieDto dto = restTemplate.getForObject(detailUrl, MovieDto.class, apiKey, imdbId);
 
-        String url = apiUrl + "?apikey={apiKey}&t={title}";
-        MovieDto dto = restTemplate.getForObject(url, MovieDto.class, apiKey, title);
-        System.out.println(dto);
-        if (dto != null) {
-            // Map DTO → Entity
-            Movie entity = movieMapper.toEntity(dto);
-
-            // Gem i DB
+        if (dto != null && dto.title() != null) {
+            //Gem i DB
+            Movie entity = dtoMapper.toEntity(dto);
             Movie saved = movieRepository.save(entity);
-
-            // Return DTO til controller
-            return movieMapper.toDto(saved);
+            return dtoMapper.toDto(saved);
         }
 
         throw new RuntimeException("Movie not found");
-    }
-
-
-    public Movie findById(Long id) {
-        return movieRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
     }
 }
