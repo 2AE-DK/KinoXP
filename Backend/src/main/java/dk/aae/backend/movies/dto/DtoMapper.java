@@ -49,11 +49,4 @@ public class DtoMapper {
         );
     }
 
-    public User toEntity(UserDto dto) {
-        User user = new User();
-        user.setEmail(dto.email());
-        user.setUsername(dto.username());
-        user.setRole(dto.role());
-        return user;
-    }
 }
