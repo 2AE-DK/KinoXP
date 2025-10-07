@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -37,15 +39,25 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public List<ApiSearchMovie> searchMovies(String query) {
-        String searchUrl = apiUrl + "?apikey={apiKey}&s={query}&type=movie";
-        ApiSearchResult searchResult = restTemplate.getForObject(searchUrl, ApiSearchResult.class, apiKey, query);
+    public List<ApiSearchMovie> searchMovies(Map<String, String> params) {
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(apiUrl)
+                .queryParam("apikey", apiKey);
+
+
+        params.forEach(builder::queryParam);
+
+        String url = builder.toUriString();
+
+        ApiSearchResult searchResult = restTemplate.getForObject(url, ApiSearchResult.class);
 
         if (searchResult != null && searchResult.Search() != null) {
-            return searchResult.Search(); //returner liste af matches (fra API, ikke DB)
+            return searchResult.Search();
         }
+
         return List.of();
     }
+
 
     public MovieDto getMovieDetails(String imdbId) {
         //1. Tjek DB

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -36,13 +37,14 @@ public class MovieController {
 
     //1. Søgefunktion (kun API)
     @GetMapping("/search")
-    public ResponseEntity<List<ApiSearchMovie>> searchMovies(@RequestParam String title) {
-        List<ApiSearchMovie> movies = movieService.searchMovies(title);
+    public ResponseEntity<List<ApiSearchMovie>> searchMovies(@RequestParam Map<String, String> params) {
+        List<ApiSearchMovie> movies = movieService.searchMovies(params);
         if (movies.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(movies);
     }
+
 
     //2. Henter detaljer om en specifik film, (DB først, ellers API)
     @GetMapping("/{imdbId}")
