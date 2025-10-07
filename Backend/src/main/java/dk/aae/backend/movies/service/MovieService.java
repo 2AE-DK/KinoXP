@@ -22,10 +22,10 @@ public class MovieService {
     private final RestTemplate restTemplate = new RestTemplate();
 
 
-    @Value("${omdb.api.key}")
+    @Value("${omdb_api_key}")
     private String apiKey;
 
-    @Value("${omdb.api.url}")
+    @Value("${omdb_api_url}")
     private String apiUrl;
 
     public MovieService(MovieRepository movieRepository, DtoMapper dtoMapper) {
