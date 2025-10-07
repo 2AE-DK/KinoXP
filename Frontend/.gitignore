@@ -1,0 +1,51 @@
+# Node dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+out/
+.next/
+.nuxt/
+.astro/
+.storybook-static/
+.vite/
+.parcel-cache/
+.cache/
+
+# Production artifacts
+coverage/
+.nyc_output/
+coverage-final.json
+
+# Environment variables
+.env
+.env.*.local
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# IDEs and editors
+.idea/
+*.iml
+.vscode/
+*.sublime-workspace
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Misc
+*.local
+.sass-cache
+parcel-cache/
