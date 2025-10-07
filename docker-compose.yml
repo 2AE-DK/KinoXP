@@ -9,8 +9,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       DB_HOST: db
-      omdb.api.key: ${omdb.api.key}
-      omdb.api.url: ${omdb.api.url}
+      omdb_api_key: ${omdb_api_key}
+      omdb_api_url: ${omdb_api_url}
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
