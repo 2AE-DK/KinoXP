@@ -12,9 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MovieService {
@@ -40,22 +38,75 @@ public class MovieService {
     }
 
     public List<ApiSearchMovie> searchMovies(Map<String, String> params) {
+        if (!params.containsKey("s") || params.get("s").trim().isEmpty()) {
+            return List.of();
+        }
 
+        String searchTerm = params.get("s").trim();
+
+        // First, try exact search with the API
+        List<ApiSearchMovie> exactResults = searchFromApi(params);
+
+        // If exact search returns few results, try broader searches
+        if (exactResults.size() < 5) {
+            // Try searching for individual words
+            String[] words = searchTerm.split("\\s+");
+            List<ApiSearchMovie> allResults = new ArrayList<>(exactResults);
+
+            for (String word : words) {
+                if (word.length() > 2) { // Only search words longer than 2 characters
+                    Map<String, String> wordParams = new HashMap<>(params);
+                    wordParams.put("s", word);
+                    List<ApiSearchMovie> wordResults = searchFromApi(wordParams);
+
+                    // Filter results to only include movies that contain the original search term
+                    List<ApiSearchMovie> filteredResults = wordResults.stream()
+                        .filter(movie -> containsSearchTerm(movie, searchTerm))
+                        .toList();
+
+                    allResults.addAll(filteredResults);
+                }
+            }
+
+            // Remove duplicates based on imdbID
+            return allResults.stream()
+                .distinct()
+                .toList();
+        }
+
+        return exactResults;
+    }
+
+    private List<ApiSearchMovie> searchFromApi(Map<String, String> params) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(apiUrl)
                 .queryParam("apikey", apiKey);
 
+        Map<String, String> processedParams = new HashMap<>(params);
+        if (processedParams.containsKey("s")) {
+            String searchTerm = processedParams.get("s");
+            searchTerm = searchTerm.trim().replaceAll("\\s+", "+");
+            processedParams.put("s", searchTerm);
+        }
 
-        params.forEach(builder::queryParam);
-
+        processedParams.forEach(builder::queryParam);
         String url = builder.toUriString();
 
-        ApiSearchResult searchResult = restTemplate.getForObject(url, ApiSearchResult.class);
-
-        if (searchResult != null && searchResult.Search() != null) {
-            return searchResult.Search();
+        try {
+            ApiSearchResult searchResult = restTemplate.getForObject(url, ApiSearchResult.class);
+            if (searchResult != null && searchResult.Search() != null) {
+                return searchResult.Search();
+            }
+        } catch (Exception e) {
+            System.err.println("Error searching movies: " + e.getMessage());
         }
 
         return List.of();
+    }
+
+    private boolean containsSearchTerm(ApiSearchMovie movie, String searchTerm) {
+        String title = movie.title().toLowerCase();
+        String search = searchTerm.toLowerCase();
+        return title.contains(search);
     }
 
 
