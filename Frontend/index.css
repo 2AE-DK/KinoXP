@@ -80,7 +80,7 @@ img {
 
 
 .search-icon {
-    position absolute;
+    position: absolute;
     left: 97%;
     width: 24px;              
     height: 24px;
