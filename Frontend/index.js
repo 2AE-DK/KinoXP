@@ -28,6 +28,7 @@ let lastSearchResults = [];
 function init(){
   setupRouting();
   setupLogo();
+  setupAuthButtons();
   handleInitialRoute();
 }
 
@@ -94,6 +95,255 @@ function setupLogo() {
   }
 }
 
+// Setup authentication buttons (Sign up and Sign in)
+function setupAuthButtons() {
+  // Create container for auth buttons
+  const authContainer = document.createElement('div');
+  authContainer.className = 'auth-buttons-container';
+  
+  // Create Sign Up button
+  const signUpBtn = document.createElement('button');
+  signUpBtn.className = 'auth-button auth-button-signup';
+  signUpBtn.textContent = 'Sign up';
+  signUpBtn.addEventListener('click', showSignUpForm);
+  
+  // Create Sign In button
+  const signInBtn = document.createElement('button');
+  signInBtn.className = 'auth-button auth-button-signin';
+  signInBtn.textContent = 'Sign in';
+  signInBtn.addEventListener('click', showSignInForm);
+  
+  // Append buttons to container
+  authContainer.appendChild(signUpBtn);
+  authContainer.appendChild(signInBtn);
+  
+  // Append container to body
+  document.body.appendChild(authContainer);
+}
+
+// Show Sign Up Form
+function showSignUpForm() {
+  // Create modal overlay
+  const modal = document.createElement('div');
+  modal.className = 'auth-modal';
+  modal.id = 'signUpModal';
+  
+  modal.innerHTML = `
+    <div class="auth-modal-content">
+      <button class="auth-modal-close" onclick="closeAuthModal('signUpModal')">&times;</button>
+      <h2>Sign Up</h2>
+      <p class="auth-subtitle">Create your account to get started</p>
+      
+      <form class="auth-form" id="signUpForm">
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" name="email" placeholder="Enter your email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="signupUsername">Username</label>
+          <input type="text" id="signupUsername" name="username" placeholder="Choose a username" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" name="password" placeholder="Create a password" required>
+        </div>
+        
+        <button type="submit" class="auth-submit-btn">Create Account</button>
+      </form>
+      
+      <p class="auth-switch">
+        Already have an account? 
+        <a href="#" onclick="switchToSignIn(event)">Sign in</a>
+      </p>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Add form submit handler
+  const form = document.getElementById('signUpForm');
+  form.addEventListener('submit', handleSignUp);
+  
+  // Close modal when clicking outside
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeAuthModal('signUpModal');
+    }
+  });
+}
+
+// Show Sign In Form
+function showSignInForm() {
+  // Create modal overlay
+  const modal = document.createElement('div');
+  modal.className = 'auth-modal';
+  modal.id = 'signInModal';
+  
+  modal.innerHTML = `
+    <div class="auth-modal-content">
+      <button class="auth-modal-close" onclick="closeAuthModal('signInModal')">&times;</button>
+      <h2>Sign In</h2>
+      <p class="auth-subtitle">Welcome back! Please sign in to continue</p>
+      
+      <form class="auth-form" id="signInForm">
+        <div class="form-group">
+          <label for="signinEmail">Email</label>
+          <input type="email" id="signinEmail" name="email" placeholder="Enter your email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="signinPassword">Password</label>
+          <input type="password" id="signinPassword" name="password" placeholder="Enter your password" required>
+        </div>
+        
+        <button type="submit" class="auth-submit-btn">Sign In</button>
+      </form>
+      
+      <p class="auth-switch">
+        Don't have an account? 
+        <a href="#" onclick="switchToSignUp(event)">Sign up</a>
+      </p>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Add form submit handler
+  const form = document.getElementById('signInForm');
+  form.addEventListener('submit', handleSignIn);
+  
+  // Close modal when clicking outside
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeAuthModal('signInModal');
+    }
+  });
+}
+
+// Close authentication modal
+function closeAuthModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.remove();
+  }
+}
+
+// Switch from Sign Up to Sign In
+function switchToSignIn(event) {
+  event.preventDefault();
+  closeAuthModal('signUpModal');
+  showSignInForm();
+}
+
+// Switch from Sign In to Sign Up
+function switchToSignUp(event) {
+  event.preventDefault();
+  closeAuthModal('signInModal');
+  showSignUpForm();
+}
+
+// Handle Sign Up form submission
+function handleSignUp(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById('signupEmail').value;
+  const username = document.getElementById('signupUsername').value;
+  const password = document.getElementById('signupPassword').value;
+  
+  console.log('Sign Up Data:', { email, username, password });
+  
+  // Disable submit button to prevent double submission
+  const submitBtn = event.target.querySelector('.auth-submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Creating Account...';
+  
+  // Call backend register API
+  fetch('http://localhost:8080/api/users/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      email: email, 
+      username: username, 
+      password: password,
+      role: 'USER'  // Default role
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      // Handle error responses (409 Conflict, etc.)
+      return response.text().then(errorMsg => {
+        throw new Error(errorMsg);
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Sign up successful:', data);
+    closeAuthModal('signUpModal');
+    alert(`Account created successfully!\nWelcome, ${username}!`);
+    // Optionally automatically sign in the user
+  })
+  .catch(error => {
+    console.error('Sign up error:', error);
+    alert(`Sign up failed: ${error.message}`);
+    // Re-enable button
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Create Account';
+  });
+}
+
+// Handle Sign In form submission
+function handleSignIn(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById('signinEmail').value;
+  const password = document.getElementById('signinPassword').value;
+  
+  console.log('Sign In Data:', { email, password });
+  
+  // Disable submit button to prevent double submission
+  const submitBtn = event.target.querySelector('.auth-submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Signing In...';
+  
+  // Call backend login API
+  fetch('http://localhost:8080/api/users/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      email: email,
+      password: password 
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      // Handle error responses (401 Unauthorized, etc.)
+      return response.text().then(errorMsg => {
+        throw new Error(errorMsg);
+      });
+    }
+    return response.text();  // Backend returns plain text "Login successful"
+  })
+  .then(message => {
+    console.log('Sign in successful:', message);
+    closeAuthModal('signInModal');
+    alert(`Welcome back!\n${message}`);
+    // Store user session
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userEmail', email);
+    // Optionally update UI to show user is logged in
+  })
+  .catch(error => {
+    console.error('Sign in error:', error);
+    alert(`Sign in failed: ${error.message}`);
+    // Re-enable button
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Sign In';
+  });
+}
+
 
 
 function renderHomePage() {
@@ -126,6 +376,7 @@ function renderHomePage() {
   viewMovies.addEventListener("click", renderMoviePage)
   const searchMovies = document.getElementById('searchMoviesField')
   searchMovies.addEventListener("input", handleSearchMovies)
+
 }
 
 async function renderMoviePage(){
