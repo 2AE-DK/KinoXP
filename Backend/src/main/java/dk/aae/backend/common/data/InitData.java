@@ -2,8 +2,12 @@ package dk.aae.backend.common.data;
 
 import dk.aae.backend.movies.model.*;
 import dk.aae.backend.movies.repository.*;
+import dk.aae.backend.movies.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -30,6 +34,9 @@ public class InitData implements CommandLineRunner {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public void run(String... args) throws Exception {
         initializeData();
@@ -50,10 +57,10 @@ public class InitData implements CommandLineRunner {
         // Create sample users if needed
         if (userRepository.count() == 0) {
             User adminUser = new User("admin", "admin@cinema.com", "password123", Role.ADMIN);
-            User regularUser = new User("user", "user@cinema.com", "password123", Role.USER);
+            User regularUser = new User("user", "user@cinema.com", "password123", Role.GUEST);
             
-            userRepository.save(adminUser);
-            userRepository.save(regularUser);
+            userService.registerUser(adminUser.getUsername(),adminUser.getEmail(),adminUser.getPassword(), String.valueOf(adminUser.getRole()));
+            userService.registerUser(regularUser.getUsername(),regularUser.getEmail(),regularUser.getPassword(), String.valueOf(regularUser.getRole()));
         }
 
         // Create sample movies if needed
@@ -102,6 +109,22 @@ public class InitData implements CommandLineRunner {
                 createSeatsForShow(show3, mainTheater);
                 createSeatsForShow(show4, mainTheater);
             }
+        }
+
+        if (theaterRepository.count() == 0) {
+            Theater theater1 = new Theater("Main Theater", 100, 10, 10);
+            Theater theater2 = new Theater("Small Theater", 50, 10, 5);
+            Theater theater3 = new Theater("IMAX Theater", 200, 20, 10);
+            Theater theater4 = new Theater("VIP Theater", 30, 6, 5);
+            Theater theater5 = new Theater("3D Theater", 120, 12, 10);
+            Theater theater6 = new Theater("Dolby Atmos Theater", 150, 15, 10);
+
+            theaterRepository.save(theater1);
+            theaterRepository.save(theater2);
+            theaterRepository.save(theater3);
+            theaterRepository.save(theater4);
+            theaterRepository.save(theater5);
+            theaterRepository.save(theater6);
         }
     }
 

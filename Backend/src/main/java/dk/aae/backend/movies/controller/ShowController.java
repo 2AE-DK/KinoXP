@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/shows")
-@CrossOrigin(origins = "*")
 public class ShowController {
 
     @Autowired

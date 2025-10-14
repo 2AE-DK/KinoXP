@@ -19,7 +19,7 @@ public class Seat extends BaseEntity {
     @JoinColumn(name = "show_id", nullable = false)
     private Show show;
 
-    @Column(nullable = false)
+    @JoinColumn(name = "`row_number`", nullable = false)
     private Integer rowNumber;
 
     @Column(nullable = false)

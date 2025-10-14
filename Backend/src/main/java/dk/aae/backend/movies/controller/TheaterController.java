@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/theaters")
-@CrossOrigin(origins = "*")
 public class TheaterController {
 
     @Autowired
