@@ -534,6 +534,8 @@ body {
 .movie-actions .button {
     position: static;
     transform: none;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
 }
 
 /* Responsive design for movie details */
@@ -883,8 +885,806 @@ body {
     }
 }
 
+/* ===== ENHANCED ROLE-BASED STYLES ===== */
 
+/* User role badges */
+.user-role {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 0.5rem;
+}
 
+.user-role.admin {
+    background: linear-gradient(135deg, #ff4757, #ff3838);
+    color: white;
+}
 
+.user-role.employee {
+    background: linear-gradient(135deg, #2ed573, #1e90ff);
+    color: white;
+}
 
+.user-role.user, .user-role.guest {
+    background: linear-gradient(135deg, #3742fa, #2f3542);
+    color: white;
+}
 
+/* Role sections in user menu */
+.role-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.role-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.role-section h4 {
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+/* Management pages */
+.management-page {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    padding-top: 6rem; /* Account for fixed logo */
+}
+
+.management-page .header {
+    position: static;
+    transform: none;
+    left: auto;
+    top: auto;
+    text-align: center;
+    max-width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Theater info cards */
+.theater-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.theater-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.theater-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: var(--accent-color);
+}
+
+.theater-card h3 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.theater-card p {
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+}
+
+.theater-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Select dropdown styling */
+.form-group select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.form-group select option {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 0.5rem;
+}
+
+/* Enhanced user menu styling */
+.user-menu-content {
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.user-menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* ===== AUTHENTICATION SYSTEM STYLES ===== */
+
+/* Authentication buttons container */
+.auth-buttons-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 1000;
+    align-items: center;
+}
+
+/* Base auth button styles */
+.auth-button {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.auth-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+}
+
+/* Specific button styles */
+.auth-button-signup {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    border-color: var(--accent-color);
+    color: white;
+}
+
+.auth-button-signup:hover {
+    background: linear-gradient(135deg, var(--accent-hover), #3730a3);
+    border-color: var(--accent-hover);
+}
+
+.auth-button-signin {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.auth-button-signin:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.auth-button-user {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #10b981;
+    font-weight: 600;
+    color: white;
+}
+
+.auth-button-user:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    border-color: #059669;
+}
+
+.auth-button-logout {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-color: #ef4444;
+    color: white;
+}
+
+.auth-button-logout:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    border-color: #dc2626;
+}
+
+/* Authentication modal overlay */
+.auth-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal content */
+.auth-modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: slideIn 0.3s ease;
+    backdrop-filter: blur(20px);
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Close button */
+.auth-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-weight: bold;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.auth-modal-close:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal headers */
+.auth-modal-content h2 {
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-subtitle {
+    color: var(--text-secondary);
+    margin: 0 0 2rem 0;
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
+
+/* Form styles */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    transform: translateY(-1px);
+}
+
+.form-group input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Submit button */
+.auth-submit-btn {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    font-family: inherit;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--accent-hover), #3730a3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.auth-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.auth-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+
+/* Switch between forms */
+.auth-switch {
+    text-align: center;
+    margin: 1.5rem 0 0 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.auth-switch a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.auth-switch a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* User menu button styling */
+.user-menu-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+}
+
+.user-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-menu-btn:active {
+    transform: translateY(0);
+}
+
+.menu-icon {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* Responsive design for authentication */
+@media (max-width: 768px) {
+    .auth-buttons-container {
+        top: 15px;
+        right: 15px;
+        gap: 8px;
+    }
+    
+    .auth-button {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .auth-modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-width: none;
+        width: calc(100% - 2rem);
+    }
+    
+    .auth-modal-content h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-buttons-container {
+        flex-direction: column;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .auth-button {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .auth-modal-content {
+        margin: 0.5rem;
+        padding: 1.25rem;
+        width: calc(100% - 1rem);
+    }
+    
+    .user-menu-btn {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Management actions bar */
+.management-actions {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+/* Button variants */
+.button.small {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    min-width: auto;
+}
+
+.button.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-color: #ef4444;
+}
+
+.button.danger:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    border-color: #dc2626;
+}
+
+/* Enhanced responsive design for role-based features */
+@media (max-width: 768px) {
+    .auth-buttons-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .management-page {
+        padding: 1rem;
+        padding-top: 5rem;
+    }
+    
+    .theater-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .management-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .management-actions .button {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .theater-actions {
+        flex-direction: column;
+    }
+    
+    .theater-actions .button {
+        width: 100%;
+    }
+    
+    .role-section h4 {
+        font-size: 0.9rem;
+    }
+    
+    .user-menu-btn {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .management-page {
+        padding: 0.5rem;
+        padding-top: 4rem;
+    }
+    
+    .theater-card {
+        padding: 1rem;
+    }
+    
+    .form-group select {
+        padding: 0.625rem;
+        font-size: 0.9rem;
+    }
+    
+    .user-role {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.6rem;
+    }
+}
+
+/* ==== BOOKING SYSTEM STYLES ==== */
+
+/* Bookings page header */
+.bookings-header {
+    position: static;
+    text-align: center;
+    padding: 2rem;
+    margin-bottom: 0;
+    max-width: none;
+    transform: none;
+    top: auto;
+    left: auto;
+}
+
+.bookings-header h1 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+}
+
+.bookings-header p {
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Primary button style for Book Film button */
+.button.primary {
+    background: var(--gradient-primary);
+    border-color: var(--accent-color);
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+/* Bookings container */
+.bookings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Individual booking card */
+.booking-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px var(--shadow-dark);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.booking-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--shadow-dark);
+}
+
+/* Booking poster */
+.booking-poster {
+    flex-shrink: 0;
+    width: 80px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--secondary-bg);
+}
+
+.booking-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.booking-poster .no-poster {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Booking details */
+.booking-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.booking-details h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.booking-details p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.booking-details strong {
+    color: var(--text-primary);
+}
+
+/* No bookings state */
+.no-bookings {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.no-bookings h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.no-bookings p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Bookings actions */
+.bookings-actions {
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Small button style for cancel booking */
+.button.small {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive design for bookings */
+@media (max-width: 768px) {
+    .bookings-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .booking-card {
+        padding: 1rem;
+    }
+    
+    .booking-poster {
+        width: 60px;
+        height: 90px;
+    }
+    
+    .booking-details h3 {
+        font-size: 1rem;
+    }
+    
+    .booking-details p {
+        font-size: 0.8rem;
+    }
+}
